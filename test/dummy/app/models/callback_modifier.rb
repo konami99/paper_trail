@@ -11,6 +11,7 @@ class CallbackModifier < ActiveRecord::Base
   end
 
   def flagged_deleted?
+    binding.pry
     deleted?
   end
 end

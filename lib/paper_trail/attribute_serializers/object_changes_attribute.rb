@@ -21,6 +21,7 @@ module PaperTrail
       # Modifies `changes` in place.
       # TODO: Return a new hash instead.
       def alter(changes, serialization_method)
+        binding.pry
         # Don't serialize before values before inserting into columns of type
         # `JSON` on `PostgreSQL` databases.
         return changes if object_changes_col_is_json?

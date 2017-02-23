@@ -210,11 +210,12 @@ module PaperTrail
       @in_after_callback = true
       return unless enabled?
       versions_assoc = @record.send(@record.class.versions_association_name)
-
+      binding.pry
       version = PaperTrail::Version.new data_for_create
       version.item ||= Object.const_get(@record.class).unscoped.find @record.id
-
+      binding.pry
       if version.save
+        binding.pry
         versions_assoc << version
         update_transaction_id(version)
         save_associations(version)

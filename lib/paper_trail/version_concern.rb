@@ -31,7 +31,7 @@ module PaperTrail
     module ClassMethods
       def with_item_keys(item_type, item_id)
         binding.pry
-        where(item_type: item_type, item_id: item_id).unscoped
+        where(item_type: item_type, item_id: item_id)
       end
 
       def creates

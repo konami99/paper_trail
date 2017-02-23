@@ -126,7 +126,7 @@ module PaperTrail
       binding.pry
       @model_class.has_many(
         @model_class.versions_association_name,
-        -> { order(model.timestamp_sort_order) },
+        -> { unscoped.order(model.timestamp_sort_order) },
         class_name: @model_class.version_class_name,
         as: :item
       )

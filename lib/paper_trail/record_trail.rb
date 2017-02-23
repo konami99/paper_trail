@@ -211,13 +211,16 @@ module PaperTrail
       return unless enabled?
       versions_assoc = @record.send(@record.class.versions_association_name)
 
-      binding.pry
+      version = PaperTrail::Version.new data_for_create
+      version.item ||= Object.const_get(@record.class).unscoped.find @record.id
 
-      version = versions_assoc.create! data_for_create
-
-
-      update_transaction_id(version)
-      save_associations(version)
+      if version.save
+        versions_assoc << version
+        update_transaction_id(version)
+        save_associations(version)
+      else
+        log_version_errors(version, :create)
+      end
     ensure
       @in_after_callback = false
     end
@@ -281,10 +284,8 @@ module PaperTrail
         versions_assoc = @record.send(@record.class.versions_association_name)
 
         #binding.pry
-
-        previous_version = versions_assoc.last
         version = PaperTrail::Version.new data_for_update
-        version.item ||= Object.const_get(previous_version.item_type).unscoped.find previous_version.item_id
+        version.item ||= Object.const_get(@record.class).unscoped.find @record.id
 
         if version.save
           #binding.pry

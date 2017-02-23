@@ -30,22 +30,27 @@ module PaperTrail
     # :nodoc:
     module ClassMethods
       def with_item_keys(item_type, item_id)
+        binding.pry
         where item_type: item_type, item_id: item_id
       end
 
       def creates
+        binding.pry
         where event: "create"
       end
 
       def updates
+        binding.pry
         where event: "update"
       end
 
       def destroys
+        binding.pry
         where event: "destroy"
       end
 
       def not_creates
+        binding.pry
         where "event <> ?", "create"
       end
 
@@ -57,6 +62,7 @@ module PaperTrail
       # @return `ActiveRecord::Relation`
       # @api public
       def subsequent(obj, timestamp_arg = false)
+        binding.pry
         if timestamp_arg != true && primary_key_is_int?
           return where(arel_table[primary_key].gt(obj.id)).order(arel_table[primary_key].asc)
         end
@@ -73,6 +79,7 @@ module PaperTrail
       # @return `ActiveRecord::Relation`
       # @api public
       def preceding(obj, timestamp_arg = false)
+        binding.pry
         if timestamp_arg != true && primary_key_is_int?
           return where(arel_table[primary_key].lt(obj.id)).order(arel_table[primary_key].desc)
         end
@@ -83,6 +90,7 @@ module PaperTrail
       end
 
       def between(start_time, end_time)
+        binding.pry
         where(
           arel_table[:created_at].gt(start_time).
           and(arel_table[:created_at].lt(end_time))
@@ -92,6 +100,7 @@ module PaperTrail
       # Defaults to using the primary key as the secondary sort order if
       # possible.
       def timestamp_sort_order(direction = "asc")
+        binding.pry
         [arel_table[:created_at].send(direction.downcase)].tap do |array|
           array << arel_table[primary_key].send(direction.downcase) if primary_key_is_int?
         end
@@ -118,6 +127,7 @@ module PaperTrail
       #
       # @api public
       def where_object(args = {})
+        binding.pry
         raise ArgumentError, "expected to receive a Hash" unless args.is_a?(Hash)
         Queries::Versions::WhereObject.new(self, args).execute
       end
@@ -149,11 +159,13 @@ module PaperTrail
       #
       # @api public
       def where_object_changes(args = {})
+        binding.pry
         raise ArgumentError, "expected to receive a Hash" unless args.is_a?(Hash)
         Queries::Versions::WhereObjectChanges.new(self, args).execute
       end
 
       def primary_key_is_int?
+        binding.pry
         @primary_key_is_int ||= columns_hash[primary_key].type == :integer
       rescue
         true
@@ -162,18 +174,21 @@ module PaperTrail
       # Returns whether the `object` column is using the `json` type supported
       # by PostgreSQL.
       def object_col_is_json?
+        binding.pry
         [:json, :jsonb].include?(columns_hash["object"].type)
       end
 
       # Returns whether the `object_changes` column is using the `json` type
       # supported by PostgreSQL.
       def object_changes_col_is_json?
+        binding.pry
         [:json, :jsonb].include?(columns_hash["object_changes"].try(:type))
       end
     end
 
     # @api private
     def object_deserialized
+      binding.pry
       if self.class.object_col_is_json?
         object
       else
@@ -209,6 +224,7 @@ module PaperTrail
     #   - `:preserve` - Attributes undefined in version record are not modified.
     #
     def reify(options = {})
+      binding.pry
       return nil if object.nil?
       ::PaperTrail::Reifier.reify(self, options)
     end
@@ -217,16 +233,19 @@ module PaperTrail
     # `ActiveModel::Dirty#changes`. returns `nil` if your `versions` table does
     # not have an `object_changes` text column.
     def changeset
+      binding.pry
       return nil unless self.class.column_names.include? "object_changes"
       @changeset ||= load_changeset
     end
 
     # Returns who put the item into the state stored in this version.
     def paper_trail_originator
+      binding.pry
       @paper_trail_originator ||= previous.try(:whodunnit)
     end
 
     def originator
+      binding.pry
       ::ActiveSupport::Deprecation.warn "Use paper_trail_originator instead of originator."
       paper_trail_originator
     end
@@ -234,11 +253,13 @@ module PaperTrail
     # Returns who changed the item from the state it had in this version. This
     # is an alias for `whodunnit`.
     def terminator
+      binding.pry
       @terminator ||= whodunnit
     end
     alias version_author terminator
 
     def sibling_versions(reload = false)
+      binding.pry
       if reload || @sibling_versions.nil?
         @sibling_versions = self.class.with_item_keys(item_type, item_id)
       end
@@ -246,10 +267,12 @@ module PaperTrail
     end
 
     def next
+      binding.pry
       @next ||= sibling_versions.subsequent(self).first
     end
 
     def previous
+      binding.pry
       @previous ||= sibling_versions.preceding(self).first
     end
 
@@ -258,6 +281,7 @@ module PaperTrail
     # for example, has an index of 0.
     # @api public
     def index
+      binding.pry
       @index ||= RecordHistory.new(sibling_versions, self.class).index(self)
     end
 
@@ -298,6 +322,7 @@ module PaperTrail
     # and we must deserialize it ourselves.
     # @api private
     def object_changes_deserialized
+      binding.pry
       if self.class.object_changes_col_is_json?
         object_changes
       else
@@ -313,6 +338,7 @@ module PaperTrail
     # option, and if so enforces it.
     # @api private
     def enforce_version_limit!
+      binding.pry
       limit = PaperTrail.config.version_limit
       return unless limit.is_a? Numeric
       previous_versions = sibling_versions.not_creates

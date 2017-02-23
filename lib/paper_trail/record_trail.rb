@@ -91,12 +91,12 @@ module PaperTrail
         !notably_changed.include?(k)
       }
 
-      binding.pry
+      #binding.pry
       AttributeSerializers::ObjectChangesAttribute.
         new(@record.class).
         serialize(notable_changes)
 
-      binding.pry
+      #binding.pry
       notable_changes.to_hash
     end
 
@@ -300,11 +300,11 @@ module PaperTrail
         data[:created_at] = @record.updated_at
       end
       if record_object_changes?
-        binding.pry
+        #binding.pry
         data[:object_changes] = recordable_object_changes
-        binding.pry
+        #binding.pry
       end
-      binding.pry
+      #binding.pry
       add_transaction_id_to(data)
       merge_metadata_into(data)
     end
@@ -330,12 +330,12 @@ module PaperTrail
     # serialization here, using `PaperTrail.serializer`.
     # @api private
     def recordable_object_changes
-      binding.pry
+      #binding.pry
       if @record.class.paper_trail.version_class.object_changes_col_is_json?
-        binding.pry
+        #binding.pry
         changes
       else
-        binding.pry
+        #binding.pry
         PaperTrail.serializer.dump(changes)
       end
     end

@@ -18,7 +18,7 @@ module PaperTrail
         # can be assigned in order to reify that association.
         # @api private
         def load_record(assoc, id, options, version)
-          binding.pry
+          #binding.pry
           if version.nil?
             assoc.klass.where(assoc.klass.primary_key => id).first
           else

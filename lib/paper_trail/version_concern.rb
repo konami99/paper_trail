@@ -265,6 +265,7 @@ module PaperTrail
 
     # @api private
     def load_changeset
+      binding.pry
       # First, deserialize the `object_changes` column.
       changes = HashWithIndifferentAccess.new(object_changes_deserialized)
 
@@ -287,6 +288,7 @@ module PaperTrail
 
       # Finally, return a Hash mapping each attribute name to
       # a two-element array representing before and after.
+      binding.pry
       changes
     end
 

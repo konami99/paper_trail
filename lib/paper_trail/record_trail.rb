@@ -325,6 +325,7 @@ module PaperTrail
     # serialization here, using `PaperTrail.serializer`.
     # @api private
     def recordable_object_changes
+      binding.pry
       if @record.class.paper_trail.version_class.object_changes_col_is_json?
         changes
       else

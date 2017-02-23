@@ -298,8 +298,11 @@ module PaperTrail
         data[:created_at] = @record.updated_at
       end
       if record_object_changes?
+        binding.pry
         data[:object_changes] = recordable_object_changes
+        binding.pry
       end
+      binding.pry
       add_transaction_id_to(data)
       merge_metadata_into(data)
     end
@@ -327,8 +330,10 @@ module PaperTrail
     def recordable_object_changes
       binding.pry
       if @record.class.paper_trail.version_class.object_changes_col_is_json?
+        binding.pry
         changes
       else
+        binding.pry
         PaperTrail.serializer.dump(changes)
       end
     end

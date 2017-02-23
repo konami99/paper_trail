@@ -533,6 +533,7 @@ module PaperTrail
       }
 
       if assoc.options[:polymorphic]
+        binding.pry
         associated_record = @record.send(assoc.name) if @record.send(assoc.foreign_type)
         if associated_record && associated_record.class.paper_trail.enabled?
           assoc_version_args[:foreign_key_id] = associated_record.id
@@ -542,6 +543,7 @@ module PaperTrail
       end
 
       if assoc_version_args.key?(:foreign_key_id)
+        binding.pry
         PaperTrail::VersionAssociation.create(assoc_version_args)
       end
     end

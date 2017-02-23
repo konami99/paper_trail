@@ -274,11 +274,15 @@ module PaperTrail
       @in_after_callback = true
       if enabled? && (force || changed_notably?)
         versions_assoc = @record.send(@record.class.versions_association_name)
+
+        binding.pry
+
         previous_version = versions_assoc.last
         version = PaperTrail::Version.new data_for_update
         version.item ||= Object.const_get(previous_version.item_type).unscoped.find previous_version.item_id
 
         if version.save
+          binding.pry
           versions_assoc << version
           update_transaction_id(version)
           save_associations(version)

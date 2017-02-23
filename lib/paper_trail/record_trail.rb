@@ -274,7 +274,9 @@ module PaperTrail
       @in_after_callback = true
       if enabled? && (force || changed_notably?)
         versions_assoc = @record.send(@record.class.versions_association_name)
+        binding.pry
         version = versions_assoc.create(data_for_update)
+        binding.pry
         if version.errors.any?
           log_version_errors(version, :update)
         else

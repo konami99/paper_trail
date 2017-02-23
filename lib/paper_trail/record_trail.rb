@@ -90,9 +90,13 @@ module PaperTrail
       notable_changes = changes_in_latest_version.delete_if { |k, _v|
         !notably_changed.include?(k)
       }
+
+      binding.pry
       AttributeSerializers::ObjectChangesAttribute.
         new(@record.class).
         serialize(notable_changes)
+
+      binding.pry
       notable_changes.to_hash
     end
 

@@ -210,12 +210,12 @@ module PaperTrail
       @in_after_callback = true
       return unless enabled?
       versions_assoc = @record.send(@record.class.versions_association_name)
-      binding.pry
+      #binding.pry
       version = PaperTrail::Version.new data_for_create
       version.item ||= @record.class.unscoped.find @record.id
-      binding.pry
+      #binding.pry
       if version.save
-        binding.pry
+        #binding.pry
         versions_assoc << version
         update_transaction_id(version)
         save_associations(version)
@@ -546,7 +546,7 @@ module PaperTrail
       }
 
       if assoc.options[:polymorphic]
-        binding.pry
+        #binding.pry
         associated_record = @record.send(assoc.name) if @record.send(assoc.foreign_type)
         if associated_record && associated_record.class.paper_trail.enabled?
           assoc_version_args[:foreign_key_id] = associated_record.id
@@ -556,7 +556,7 @@ module PaperTrail
       end
 
       if assoc_version_args.key?(:foreign_key_id)
-        binding.pry
+        #binding.pry
         PaperTrail::VersionAssociation.create(assoc_version_args)
       end
     end

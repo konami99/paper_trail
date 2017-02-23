@@ -123,7 +123,7 @@ module PaperTrail
       @model_class.versions_association_name = options[:versions] || :versions
 
       @model_class.send :attr_accessor, :paper_trail_event
-      
+      binding.pry
       @model_class.has_many(
         @model_class.versions_association_name,
         -> { order(model.timestamp_sort_order) },

@@ -281,6 +281,7 @@ module PaperTrail
       #
       # Note: `item` returns nil if `event` is "destroy".
       unless item.nil?
+        binding.pry
         AttributeSerializers::ObjectChangesAttribute.
           new(item.class).
           deserialize(changes)

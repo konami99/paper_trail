@@ -212,7 +212,7 @@ module PaperTrail
       versions_assoc = @record.send(@record.class.versions_association_name)
       binding.pry
       version = PaperTrail::Version.new data_for_create
-      version.item ||= Object.const_get(@record.class).unscoped.find @record.id
+      version.item ||= @record.class.unscoped.find @record.id
       binding.pry
       if version.save
         binding.pry
@@ -286,7 +286,7 @@ module PaperTrail
 
         #binding.pry
         version = PaperTrail::Version.new data_for_update
-        version.item ||= Object.const_get(@record.class).unscoped.find @record.id
+        version.item ||= @record.class.unscoped.find @record.id
 
         if version.save
           #binding.pry
